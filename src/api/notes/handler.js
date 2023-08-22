@@ -104,7 +104,7 @@ class NotesHandler {
 
       return {
         status: "success",
-        message: "catatan berhasil diperbarui",
+        message: "Catatan berhasil diperbarui",
       };
     } catch (error) {
       // menggunakan error dari exceptions Client Error
@@ -134,7 +134,7 @@ class NotesHandler {
       await this._service.deleteNoteById(id);
       return {
         status: "success",
-        message: "berhasil hapus",
+        message: "Catatan berhasil dihapus",
       };
     } catch (error) {
       // menggunakan error dari exceptions Client Error
