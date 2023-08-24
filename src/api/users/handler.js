@@ -5,21 +5,26 @@ class UsersHandler {
     this._service = service;
     this._validator = validator;
 
+    // fungsi postUserHandler agar nilainya tetap instance dari UsersHandler.
     this.postUserHandler = this.postUserHandler.bind(this);
     this.getUserByIdHandler = this.getUserByIdHandler.bind(this);
   }
 
+  //   fungsi add user
   async postUserHandler(request, h) {
     try {
+      // validasi request.payload
       this._validator.validateUserPayload(request.payload);
+      //   mendapatkan properti user
       const { username, password, fullname } = request.payload;
-
+      //   fungsi adduser dari this._service
+      //   mendapatkan id dari tambah data
       const userId = await this._service.addUser({
         username,
         password,
         fullname,
       });
-
+      //   mengembalikan request dengan response code 201
       const response = h.response({
         status: "success",
         message: "User berhasil ditambahkan",
@@ -30,6 +35,7 @@ class UsersHandler {
       response.code(201);
       return response;
     } catch (error) {
+      // jika error dari instance clientError
       if (error instanceof ClientError) {
         const response = h.response({
           status: "fail",
@@ -38,8 +44,7 @@ class UsersHandler {
         response.code(error.statusCode);
         return response;
       }
-
-      // Server ERROR!
+      //   server error!
       const response = h.response({
         status: "error",
         message: "Maaf, terjadi kegagalan pada server kami.",
@@ -50,10 +55,12 @@ class UsersHandler {
     }
   }
 
+  //   fungsi get user by id
   async getUserByIdHandler(request, h) {
     try {
       const { id } = request.params;
       const user = await this._service.getUserById(id);
+      //   kembalikan data user
       return {
         status: "success",
         data: {
@@ -61,6 +68,7 @@ class UsersHandler {
         },
       };
     } catch (error) {
+      // jika error dari instance clientError
       if (error instanceof ClientError) {
         const response = h.response({
           status: "fail",
@@ -69,8 +77,7 @@ class UsersHandler {
         response.code(error.statusCode);
         return response;
       }
-
-      // server ERROR!
+      //   server error!
       const response = h.response({
         status: "error",
         message: "Maaf, terjadi kegagalan pada server kami.",

@@ -22,7 +22,7 @@ class UsersService {
     // query insert to database
     const query = {
       text: "INSERT INTO users VALUES($1, $2, $3, $4) RETURNING id",
-      values: [id, username, password, fullname],
+      values: [id, username, hashedPassword, fullname],
     };
     const result = await this._pool.query(query);
 
