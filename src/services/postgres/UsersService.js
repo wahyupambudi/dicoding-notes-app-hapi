@@ -64,7 +64,7 @@ class UsersService {
     }
 
     // kembalikan fungsi dengan nilai user
-    return result.rows[0].id;
+    return result.rows[0];
   }
 }
 
