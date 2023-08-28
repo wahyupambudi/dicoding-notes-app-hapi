@@ -63,7 +63,7 @@ class UsersService {
       throw new NotFoundError("User tidak ditemukan");
     }
 
-    // kembalikan fungsi dengan nilai user
+    // kembalikan fungsi dengan nilai user yang didapatkan sesuai id
     return result.rows[0];
   }
 }
