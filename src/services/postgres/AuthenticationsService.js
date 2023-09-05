@@ -31,8 +31,10 @@ class AuthenticationsService {
 
   //   membuat fungsi delete token
   async deleteRefreshToken(token) {
+    await this.verifyRefreshToken(token);
+
     const query = {
-      text: "DELETE token FROM authentications WHERE token = $1",
+      text: "DELETE FROM authentications WHERE token = $1",
       values: [token],
     };
     await this._pool.query(query);
