@@ -46,7 +46,7 @@ class UsersService {
     // jika user sudah ada
     if (result.rows.length > 0) {
       throw new InvariantError(
-        "Gagal menambahkan user. Username sudah digunakan."
+        "Gagal menambahkan user. Username sudah digunakan.",
       );
     }
   }
@@ -92,6 +92,16 @@ class UsersService {
     }
 
     return id;
+  }
+
+  // membuat fungsi getUsersByUsername
+  async getUserByUsername(username) {
+    const query = {
+      text: "SELECT id, username, fullname FROM users WHERE username LIKE $1",
+      values: [`%${username}%`],
+    };
+    const result = await this._pool.query(query);
+    return result.rows;
   }
 }
 
