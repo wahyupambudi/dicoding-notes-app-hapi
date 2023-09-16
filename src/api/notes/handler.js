@@ -15,12 +15,8 @@ class NotesHandler {
 
   async postNoteHandler(request, h) {
     try {
-      // menggunakan validator node payload
       this._validator.validateNotePayload(request.payload);
-
       const { title = "untitled", body, tags } = request.payload;
-
-      // menggunakan authorizations
       const { id: credentialId } = request.auth.credentials;
 
       const noteId = await this._service.addNote({
@@ -40,7 +36,6 @@ class NotesHandler {
       response.code(201);
       return response;
     } catch (error) {
-      // menggunakan error dari exceptions Client Error
       if (error instanceof ClientError) {
         const response = h.response({
           status: "fail",
@@ -50,7 +45,7 @@ class NotesHandler {
         return response;
       }
 
-      // Server ERROR
+      // Server ERROR!
       const response = h.response({
         status: "error",
         message: "Maaf, terjadi kegagalan pada server kami.",
@@ -63,7 +58,6 @@ class NotesHandler {
 
   async getNotesHandler(request) {
     const { id: credentialId } = request.auth.credentials;
-
     const notes = await this._service.getNotes(credentialId);
     return {
       status: "success",
@@ -79,7 +73,6 @@ class NotesHandler {
       const { id: credentialId } = request.auth.credentials;
 
       await this._service.verifyNoteAccess(id, credentialId);
-
       const note = await this._service.getNoteById(id);
       return {
         status: "success",
@@ -88,7 +81,6 @@ class NotesHandler {
         },
       };
     } catch (error) {
-      // menggunakan error dari exceptions Client Error
       if (error instanceof ClientError) {
         const response = h.response({
           status: "fail",
@@ -97,7 +89,8 @@ class NotesHandler {
         response.code(error.statusCode);
         return response;
       }
-      // Server ERROR
+
+      // Server ERROR!
       const response = h.response({
         status: "error",
         message: "Maaf, terjadi kegagalan pada server kami.",
@@ -110,15 +103,11 @@ class NotesHandler {
 
   async putNoteByIdHandler(request, h) {
     try {
-      // menggunakan validator node payload
       this._validator.validateNotePayload(request.payload);
-
       const { id } = request.params;
-
       const { id: credentialId } = request.auth.credentials;
 
-      await this._service.verifyNoteOwner(id, credentialId);
-
+      await this._service.verifyNoteAccess(id, credentialId);
       await this._service.editNoteById(id, request.payload);
 
       return {
@@ -126,7 +115,6 @@ class NotesHandler {
         message: "Catatan berhasil diperbarui",
       };
     } catch (error) {
-      // menggunakan error dari exceptions Client Error
       if (error instanceof ClientError) {
         const response = h.response({
           status: "fail",
@@ -136,7 +124,7 @@ class NotesHandler {
         return response;
       }
 
-      // Server ERROR
+      // Server ERROR!
       const response = h.response({
         status: "error",
         message: "Maaf, terjadi kegagalan pada server kami.",
@@ -150,18 +138,16 @@ class NotesHandler {
   async deleteNoteByIdHandler(request, h) {
     try {
       const { id } = request.params;
-
       const { id: credentialId } = request.auth.credentials;
 
       await this._service.verifyNoteOwner(id, credentialId);
-
       await this._service.deleteNoteById(id);
+
       return {
         status: "success",
         message: "Catatan berhasil dihapus",
       };
     } catch (error) {
-      // menggunakan error dari exceptions Client Error
       if (error instanceof ClientError) {
         const response = h.response({
           status: "fail",
@@ -171,7 +157,7 @@ class NotesHandler {
         return response;
       }
 
-      // Server ERROR
+      // Server ERROR!
       const response = h.response({
         status: "error",
         message: "Maaf, terjadi kegagalan pada server kami.",
@@ -182,7 +168,6 @@ class NotesHandler {
     }
   }
 
-  // membuat fungsi getUsersByUsernameHandler
   async getUsersByUsernameHandler(request, h) {
     try {
       const { username = "" } = request.query;
