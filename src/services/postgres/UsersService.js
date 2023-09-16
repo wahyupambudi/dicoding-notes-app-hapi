@@ -46,7 +46,7 @@ class UsersService {
     // jika user sudah ada
     if (result.rows.length > 0) {
       throw new InvariantError(
-        "Gagal menambahkan user. Username sudah digunakan."
+        "Gagal menambahkan user. Username sudah digunakan.",
       );
     }
   }
