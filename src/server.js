@@ -6,11 +6,8 @@ const Jwt = require("@hapi/jwt");
 
 // notes
 const notes = require("./api/notes");
-const NotesValidator = require("./validator/notes");
-// jika menggunakan memory
-// const NotesService = require("./services/inMemory/NotesService");
-// jika menggunakan postgre
 const NotesService = require("./services/postgres/NotesService");
+const NotesValidator = require("./validator/notes");
 
 // users
 const users = require("./api/users");
@@ -37,9 +34,6 @@ const init = async () => {
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.HOST,
-    debug: {
-      request: ["error"],
-    },
     routes: {
       cors: {
         origin: ["*"],
@@ -93,6 +87,14 @@ const init = async () => {
         usersService,
         tokenManager: TokenManager,
         validator: AuthenticationsValidator,
+      },
+    },
+    {
+      plugin: collaborations,
+      options: {
+        collaborationsService,
+        notesService,
+        validator: CollaborationsValidator,
       },
     },
   ]);
