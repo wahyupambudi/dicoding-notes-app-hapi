@@ -126,7 +126,6 @@ class NotesService {
     }
   }
 
-  // membuat verifyNoteAccess
   async verifyNoteAccess(noteId, userId) {
     try {
       await this.verifyNoteOwner(noteId, userId);
@@ -134,13 +133,21 @@ class NotesService {
       if (error instanceof NotFoundError) {
         throw error;
       }
-
       try {
         await this._collaborationService.verifyCollaborator(noteId, userId);
       } catch {
         throw error;
       }
     }
+  }
+
+  async getUsersByUsername(username) {
+    const query = {
+      text: "SELECT id, username, fullname FROM users WHERE username LIKE $1",
+      values: [`%${username}%`],
+    };
+    const result = await this._pool.query(query);
+    return result.rows;
   }
 }
 
